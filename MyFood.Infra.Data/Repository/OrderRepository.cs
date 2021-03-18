@@ -4,6 +4,7 @@ using MyFood.Domain.Models;
 using MyFood.Infra.Data.Context;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace MyFood.Infra.Data.Repository
 {
@@ -15,9 +16,9 @@ namespace MyFood.Infra.Data.Repository
 
         }
 
-        public Order GetOpenOrderByUser(Guid userId)
+        public async Task<Order> GetOpenOrderByUser(Guid userId)
         {
-            return DbSet.AsNoTracking().FirstOrDefault(o => o.UserId == userId);
+            return await DbSet.AsNoTracking().FirstOrDefaultAsync(o => o.UserId == userId);
         }
     }
 }

@@ -28,49 +28,49 @@ namespace MyFood.Domain.CommandHandlers
             Bus = bus;
         }
 
-        public Task<Unit> Handle(RegisterNewOrderCommand message, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(RegisterNewOrderCommand message, CancellationToken cancellationToken)
         {
             if (!message.IsValid())
             {
                 NotifyValidationErrors(message);
-                return Unit.Task;
+                return await Unit.Task;
             }
 
             var order = new Order(Guid.NewGuid(), message.UserId, message.Address, message.OrderItens, message.Observation, message.OrderStatusId);
 
             if (_orderRepository.GetOpenOrderByUser(order.UserId) != null)
             {
-                Bus.RaiseEvent(new DomainNotification(message.MessageType, "Já existe um pedido em aberto para este usuário"));
-                return Unit.Task;
+                await Bus.RaiseEvent(new DomainNotification(message.MessageType, "Já existe um pedido em aberto para este usuário"));
+                return await Unit.Task;
             }
 
             _orderRepository.Add(order);
 
             if (Commit())
             {
-                Bus.RaiseEvent(new OrderRegisteredEvent(order.Id, order.Observation, order.OrderItens, order.UserId, order.Address, order.OrderStatusId));
+                await Bus.RaiseEvent(new OrderRegisteredEvent(order.Id, order.Observation, order.OrderItens, order.UserId, order.Address, order.OrderStatusId));
             }
 
-            return Unit.Task;
+            return await Unit.Task;
         }
 
-        public Task<Unit> Handle(UpdateOrderCommand message, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(UpdateOrderCommand message, CancellationToken cancellationToken)
         {
             if (!message.IsValid())
             {
                 NotifyValidationErrors(message);
-                return Unit.Task;
+                return await Unit.Task;
             }
 
             var order = new Order(Guid.NewGuid(), message.UserId, message.Address, message.OrderItens, message.Observation, message.OrderStatusId);
-            var existingOrder = _orderRepository.GetOpenOrderByUser(order.UserId);
+            var existingOrder = await _orderRepository.GetOpenOrderByUser(order.UserId);
 
             if (existingOrder != null && existingOrder.Id != order.Id)
             {
                 if (!existingOrder.Equals(order))
                 {
-                    Bus.RaiseEvent(new DomainNotification(message.MessageType, "Já existe um pedido em aberto para este usuário"));
-                    return Unit.Task;
+                    await Bus.RaiseEvent(new DomainNotification(message.MessageType, "Já existe um pedido em aberto para este usuário"));
+                    return await Unit.Task;
                 }
             }
 
@@ -78,28 +78,28 @@ namespace MyFood.Domain.CommandHandlers
 
             if (Commit())
             {
-                Bus.RaiseEvent(new OrderUpdatedEvent(order.Id, order.Observation, order.OrderItens, order.UserId, order.Address, order.OrderStatusId));
+                await Bus.RaiseEvent(new OrderUpdatedEvent(order.Id, order.Observation, order.OrderItens, order.UserId, order.Address, order.OrderStatusId));
             }
 
-            return Unit.Task;
+            return await Unit.Task;
         }
 
-        public Task<Unit> Handle(RemoveOrderCommand message, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(RemoveOrderCommand message, CancellationToken cancellationToken)
         {
             if (!message.IsValid())
             {
                 NotifyValidationErrors(message);
-                return Unit.Task;
+                return await Unit.Task;
             }
 
             _orderRepository.Remove(message.Id);
 
             if (Commit())
             {
-                Bus.RaiseEvent(new OrderRemovedEvent(message.Id));
+                await Bus.RaiseEvent(new OrderRemovedEvent(message.Id));
             }
 
-            return Unit.Task;
+            return await Unit.Task;
         }
 
         public void Dispose()

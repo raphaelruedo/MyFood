@@ -1,13 +1,14 @@
 ﻿using System;
-using System.Linq;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace MyFood.Domain.Interfaces
 {
     public interface IRepository<TEntity> : IDisposable where TEntity : class
     {
         void Add(TEntity obj);
-        TEntity GetById(Guid id);
-        IQueryable<TEntity> GetAll();
+        Task<TEntity> GetById(Guid id);
+        Task<IEnumerable<TEntity>> GetAll();
         void Update(TEntity obj);
         void Remove(Guid id);
         int SaveChanges();

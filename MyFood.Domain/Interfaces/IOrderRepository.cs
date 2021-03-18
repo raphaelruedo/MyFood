@@ -1,10 +1,11 @@
 ﻿using MyFood.Domain.Models;
 using System;
+using System.Threading.Tasks;
 
 namespace MyFood.Domain.Interfaces
 {
     public interface IOrderRepository : IRepository<Order>
     {
-        Order GetOpenOrderByUser(Guid userId);
+        Task<Order> GetOpenOrderByUser(Guid userId);
     }
 }

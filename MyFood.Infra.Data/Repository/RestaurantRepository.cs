@@ -2,7 +2,9 @@
 using MyFood.Domain.Interfaces;
 using MyFood.Domain.Models;
 using MyFood.Infra.Data.Context;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace MyFood.Infra.Data.Repository
 {
@@ -14,14 +16,14 @@ namespace MyFood.Infra.Data.Repository
 
         }
 
-        public Restaurant GetByName(string name)
+        public async Task<IEnumerable<Restaurant>> GetByName(string name)
         {
-            return DbSet.AsNoTracking().FirstOrDefault(c => c.Name == name);
+            return await DbSet.AsNoTracking().Where(c => c.Name.Contains(name)).ToListAsync();
         }
 
-        public Restaurant GetByAddress(string street, int number)
+        public async Task<Restaurant> GetByAddress(string street, int number)
         {
-            return DbSet.AsNoTracking().FirstOrDefault(r => r.Address.Street == street && r.Address.Number == number);
+            return await DbSet.AsNoTracking().FirstOrDefaultAsync(r => r.Address.Street == street && r.Address.Number == number);
         }
     }
 }

@@ -2,7 +2,8 @@
 using MyFood.Domain.Interfaces;
 using MyFood.Infra.Data.Context;
 using System;
-using System.Linq;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace MyFood.Infra.Data.Repository
 {
@@ -22,14 +23,14 @@ namespace MyFood.Infra.Data.Repository
             DbSet.Add(obj);
         }
 
-        public TEntity GetById(Guid id)
+        public async Task<TEntity> GetById(Guid id)
         {
-            return DbSet.Find(id);
+            return await DbSet.FindAsync(id);
         }
 
-        public IQueryable<TEntity> GetAll()
+        public async Task<IEnumerable<TEntity>> GetAll()
         {
-            return DbSet;
+            return await DbSet.ToListAsync();
         }
 
         public void Update(TEntity obj)

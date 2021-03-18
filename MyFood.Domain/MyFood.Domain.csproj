@@ -8,4 +8,42 @@
     <PackageReference Include="MediatR" Version="9.0.0" />
     <PackageReference Include="FluentValidation" Version="9.5.1" />
   </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="MyFood.Domain.Core\Bus\IMediatorHandler.cs" />
+    <Compile Remove="MyFood.Domain.Core\Commands\Command.cs" />
+    <Compile Remove="MyFood.Domain.Core\Events\Event.cs" />
+    <Compile Remove="MyFood.Domain.Core\obj\Debug\net5.0\.NETCoreApp,Version=v5.0.AssemblyAttributes.cs" />
+    <Compile Remove="MyFood.Domain.Core\Models\ValueObject.cs" />
+    <Compile Remove="MyFood.Domain.Core\Models\Entity.cs" />
+    <Compile Remove="MyFood.Domain.Core\Events\Message.cs" />
+    <Compile Remove="MyFood.Domain.Core\Events\IHandler.cs" />
+    <Compile Remove="MyFood.Domain.Core\Events\StoredEvent.cs" />
+    <Compile Remove="MyFood.Domain.Core\Events\IEventStore.cs" />
+    <Compile Remove="MyFood.Domain.Core\Notifications\DomainNotificationHandler.cs" />
+    <Compile Remove="MyFood.Domain.Core\Notifications\DomainNotification.cs" />
+    <Compile Remove="MyFood.Domain.Core\obj\Debug\net5.0\MyFood.Domain.Core.AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="MyFood.Domain.Core\bin\Debug\net5.0\MyFood.Domain.Core.deps.json" />
+    <None Remove="MyFood.Domain.Core\bin\Debug\net5.0\MyFood.Domain.Core.dll" />
+    <None Remove="MyFood.Domain.Core\bin\Debug\net5.0\ref\MyFood.Domain.Core.dll" />
+    <None Remove="MyFood.Domain.Core\bin\Debug\net5.0\MyFood.Domain.Core.pdb" />
+    <None Remove="MyFood.Domain.Core\obj\MyFood.Domain.Core.csproj.nuget.g.targets" />
+    <None Remove="MyFood.Domain.Core\obj\MyFood.Domain.Core.csproj.nuget.g.props" />
+    <None Remove="MyFood.Domain.Core\obj\project.nuget.cache" />
+    <None Remove="MyFood.Domain.Core\obj\MyFood.Domain.Core.csproj.nuget.dgspec.json" />
+    <None Remove="MyFood.Domain.Core\obj\project.assets.json" />
+    <None Remove="MyFood.Domain.Core\obj\Debug\net5.0\MyFood.Domain.Core.assets.cache" />
+    <None Remove="MyFood.Domain.Core\obj\Debug\net5.0\MyFood.Domain.Core.csproj.FileListAbsolute.txt" />
+    <None Remove="MyFood.Domain.Core\obj\Debug\net5.0\MyFood.Domain.Core.csprojAssemblyReference.cache" />
+    <None Remove="MyFood.Domain.Core\obj\Debug\net5.0\MyFood.Domain.Core.GeneratedMSBuildEditorConfig.editorconfig" />
+    <None Remove="MyFood.Domain.Core\obj\Debug\net5.0\MyFood.Domain.Core.AssemblyInfoInputs.cache" />
+    <None Remove="MyFood.Domain.Core\obj\Debug\net5.0\MyFood.Domain.Core.csproj.CoreCompileInputs.cache" />
+    <None Remove="MyFood.Domain.Core\obj\Debug\net5.0\MyFood.Domain.Core.dll" />
+    <None Remove="MyFood.Domain.Core\obj\Debug\net5.0\ref\MyFood.Domain.Core.dll" />
+    <None Remove="MyFood.Domain.Core\obj\Debug\net5.0\MyFood.Domain.Core.pdb" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="MyFood.Domain.Core\MyFood.Domain.Core.csproj" />
+  </ItemGroup>
 </Project>

@@ -1,10 +1,12 @@
-﻿using MyFood.Domain.Models;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using MyFood.Domain.Models;
 
 namespace MyFood.Domain.Interfaces
 {
     public interface IRestaurantRepository : IRepository<Restaurant>
     {
-        Restaurant GetByName(string name);
-        Restaurant GetByAddress(string street, int number);
+        Task<IEnumerable<Restaurant>> GetByName(string name);
+        Task<Restaurant> GetByAddress(string street, int number);
     }
 }

@@ -2,7 +2,7 @@
 using MyFood.Domain.Interfaces;
 using MyFood.Domain.Models;
 using MyFood.Infra.Data.Context;
-using System.Linq;
+using System.Threading.Tasks;
 
 namespace MyFood.Infra.Data.Repository
 {
@@ -14,9 +14,9 @@ namespace MyFood.Infra.Data.Repository
 
         }
 
-        public Product GetByName(string name)
+        public async Task<Product> GetByName(string name)
         {
-            return DbSet.AsNoTracking().FirstOrDefault(c => c.Name == name);
+            return await DbSet.AsNoTracking().FirstOrDefaultAsync(c => c.Name == name);
         }
     }
 }

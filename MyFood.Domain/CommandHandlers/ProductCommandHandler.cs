@@ -28,49 +28,49 @@ namespace MyFood.Domain.CommandHandlers
             Bus = bus;
         }
 
-        public Task<Unit> Handle(RegisterNewProductCommand message, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(RegisterNewProductCommand message, CancellationToken cancellationToken)
         {
             if (!message.IsValid())
             {
                 NotifyValidationErrors(message);
-                return Unit.Task;
+                return await Unit.Task;
             }
 
             var product = new Product(Guid.NewGuid(), message.Name, message.Description, message.Price, message.RestaurantId, message.CategoryId);
 
-            if (_productRepository.GetByName(product.Name) != null)
+            if (await _productRepository.GetByName(product.Name) != null)
             {
-                Bus.RaiseEvent(new DomainNotification(message.MessageType, "Já existe um produto com este nome."));
-                return Unit.Task;
+                await Bus.RaiseEvent(new DomainNotification(message.MessageType, "Já existe um produto com este nome."));
+                return await Unit.Task;
             }
 
             _productRepository.Add(product);
 
             if (Commit())
             {
-                Bus.RaiseEvent(new ProductRegisteredEvent(product.Id, product.Name, product.Description, product.Price, product.RestaurantId, product.CategoryId));
+                await Bus.RaiseEvent(new ProductRegisteredEvent(product.Id, product.Name, product.Description, product.Price, product.RestaurantId, product.CategoryId));
             }
 
-            return Unit.Task;
+            return await Unit.Task;
         }
 
-        public Task<Unit> Handle(UpdateProductCommand message, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(UpdateProductCommand message, CancellationToken cancellationToken)
         {
             if (!message.IsValid())
             {
                 NotifyValidationErrors(message);
-                return Unit.Task;
+                return await Unit.Task;
             }
 
             var product = new Product(message.Id, message.Name, message.Description, message.Price, message.RestaurantId, message.CategoryId);
-            var existingProduct = _productRepository.GetByName(product.Name);
+            var existingProduct = await _productRepository.GetByName(product.Name);
 
             if (existingProduct != null && existingProduct.Id != product.Id)
             {
                 if (!existingProduct.Equals(product))
                 {
-                    Bus.RaiseEvent(new DomainNotification(message.MessageType, "Já existe um produto com este nome"));
-                    return Unit.Task;
+                    await Bus.RaiseEvent(new DomainNotification(message.MessageType, "Já existe um produto com este nome"));
+                    return await Unit.Task;
                 }
             }
 
@@ -78,28 +78,28 @@ namespace MyFood.Domain.CommandHandlers
 
             if (Commit())
             {
-                Bus.RaiseEvent(new ProductUpdatedEvent(product.Id, product.Name, product.Description, product.Price, product.RestaurantId,product.CategoryId));
+                await Bus.RaiseEvent(new ProductUpdatedEvent(product.Id, product.Name, product.Description, product.Price, product.RestaurantId,product.CategoryId));
             }
 
-            return Unit.Task;
+            return await Unit.Task;
         }
 
-        public Task<Unit> Handle(RemoveProductCommand message, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(RemoveProductCommand message, CancellationToken cancellationToken)
         {
             if (!message.IsValid())
             {
                 NotifyValidationErrors(message);
-                return Unit.Task;
+                return await Unit.Task;
             }
 
             _productRepository.Remove(message.Id);
 
             if (Commit())
             {
-                Bus.RaiseEvent(new ProductRemovedEvent(message.Id));
+                await Bus.RaiseEvent(new ProductRemovedEvent(message.Id));
             }
 
-            return Unit.Task;
+            return await Unit.Task;
         }
 
         public void Dispose()
