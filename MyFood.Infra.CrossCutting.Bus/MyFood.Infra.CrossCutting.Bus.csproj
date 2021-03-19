@@ -2,9 +2,31 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
+     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+        <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
+        <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+        <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
+        <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+        <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
+        <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
+        <GenerateAssemblyInformationalVersionAttribute>false</GenerateAssemblyInformationalVersionAttribute>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\MyFood.Domain\MyFood.Domain.Core\MyFood.Domain.Core.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="MyFood.Infra.CrossCutting.IoC\NativeInjectorBootStrapper.cs" />
+    <Compile Remove="MyFood.Infra.CrossCutting.IoC\obj\Debug\net5.0\.NETCoreApp,Version=v5.0.AssemblyAttributes.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="MyFood.Infra.CrossCutting.IoC\obj\MyFood.Infra.CrossCutting.IoC.csproj.nuget.dgspec.json" />
+    <None Remove="MyFood.Infra.CrossCutting.IoC\obj\project.nuget.cache" />
+    <None Remove="MyFood.Infra.CrossCutting.IoC\obj\project.assets.json" />
+    <None Remove="MyFood.Infra.CrossCutting.IoC\obj\MyFood.Infra.CrossCutting.IoC.csproj.nuget.g.props" />
+    <None Remove="MyFood.Infra.CrossCutting.IoC\obj\MyFood.Infra.CrossCutting.IoC.csproj.nuget.g.targets" />
+    <None Remove="MyFood.Infra.CrossCutting.IoC\obj\Debug\net5.0\MyFood.Infra.CrossCutting.IoC.csproj.FileListAbsolute.txt" />
+    <None Remove="MyFood.Infra.CrossCutting.IoC\obj\Debug\net5.0\MyFood.Infra.CrossCutting.IoC.assets.cache" />
+    <None Remove="MyFood.Infra.CrossCutting.IoC\obj\Debug\net5.0\MyFood.Infra.CrossCutting.IoC.csprojAssemblyReference.cache" />
   </ItemGroup>
 </Project>

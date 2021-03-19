@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using MediatR;
@@ -12,7 +13,6 @@ using MyFood.WebApi.Controllers;
 
 namespace Next3.WebApi.Controllers
 {
-    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class RestaurantController : ApiController
@@ -29,29 +29,32 @@ namespace Next3.WebApi.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IEnumerable<RestaurantViewModel>> Get()
+        public async Task<IActionResult> Get()
         {
-            return await _restaurantAppService.GetAll();
+            return Response(await _restaurantAppService.GetAll());
         }
 
         [HttpGet]
         [Route("{id:guid}")]
-        public async Task<RestaurantViewModel> Get(Guid id)
+        public async Task<IActionResult> Get(Guid id)
         {
-            return await _restaurantAppService.GetById(id);
+            var restaurantViewModel = await _restaurantAppService.GetById(id);
+
+            return Response(restaurantViewModel);
         }
 
         [HttpGet]
         [Route("{latitude}/{longitude}/{maxDistance}")]
-        public async Task<IEnumerable<RestaurantViewModel>> Get(double latitude, double longitude, double maxDistance)
+        public async Task<IActionResult> Get(double latitude, double longitude, double maxDistance)
         {
-            return await _restaurantAppService.GetClosest(latitude, longitude, maxDistance); ;
+            var closestRestaurants = await _restaurantAppService.GetClosest(latitude, longitude, maxDistance);
+
+            return Response(closestRestaurants);
         }
 
 
         [HttpPost]
-        [Authorize(Policy = "CanWriteRestaurantData")]
-        public IActionResult Post([FromBody]RestaurantViewModel restaurantViewModel)
+        public IActionResult Post([FromBody] RestaurantViewModel restaurantViewModel)
         {
             if (!ModelState.IsValid)
             {
@@ -65,7 +68,7 @@ namespace Next3.WebApi.Controllers
         }
 
         [HttpPut]
-        public IActionResult Put([FromBody]RestaurantViewModel restaurantViewModel)
+        public IActionResult Put([FromBody] RestaurantViewModel restaurantViewModel)
         {
             if (!ModelState.IsValid)
             {

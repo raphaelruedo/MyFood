@@ -8,5 +8,6 @@ namespace MyFood.Domain.Interfaces
     {
         Task<IEnumerable<Restaurant>> GetByName(string name);
         Task<Restaurant> GetByAddress(string street, int number);
+        Task<IEnumerable<Restaurant>> GetClosest(double longitude, double latitude, double maxDistance);
     }
 }

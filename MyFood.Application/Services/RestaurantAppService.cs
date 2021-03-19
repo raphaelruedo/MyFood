@@ -4,13 +4,14 @@ using MyFood.Application.ViewModels;
 using MyFood.Domain.Commands;
 using MyFood.Domain.Core.Bus;
 using MyFood.Domain.Interfaces;
+using MyFood.Domain.Models;
 using MyFood.Infra.Data.Repository.EventSourcing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Next3.Application.Services
+namespace MyFood.Application.Services
 {
     public class RestaurantAppService : IRestaurantAppService
     {
@@ -40,13 +41,29 @@ namespace Next3.Application.Services
 
         public void Register(RestaurantViewModel restaurantViewModel)
         {
-            var registerCommand = _mapper.Map<RegisterNewRestaurantCommand>(restaurantViewModel);
+            var config = new MapperConfiguration(cfg => {
+                cfg.CreateMap<AddressViewModel, Address>();
+                cfg.CreateMap<RestaurantViewModel, RegisterNewRestaurantCommand>();
+
+            });
+
+            var mapper = config.CreateMapper();
+
+            var registerCommand = mapper.Map<RegisterNewRestaurantCommand>(restaurantViewModel);
             Bus.SendCommand(registerCommand);
         }
 
         public void Update(RestaurantViewModel restaurantViewModel)
         {
-            var updateCommand = _mapper.Map<UpdateRestaurantCommand>(restaurantViewModel);
+            var config = new MapperConfiguration(cfg => {
+                cfg.CreateMap<AddressViewModel, Address>();
+                cfg.CreateMap<RestaurantViewModel, UpdateRestaurantCommand>();
+
+            });
+
+            var mapper = config.CreateMapper();
+
+            var updateCommand = mapper.Map<UpdateRestaurantCommand>(restaurantViewModel);
             Bus.SendCommand(updateCommand);
         }
 
@@ -63,15 +80,7 @@ namespace Next3.Application.Services
 
         public async Task<IEnumerable<RestaurantViewModel>> GetClosest(double latitude, double longitude, double maxDistance)
         {
-            var closestRestaurants = (from restaurant in await _restaurantRepository.GetAll()
-                                      let distance = (6371 * Math.Acos(Math.Cos(latitude * Math.PI / 180) * Math.Cos(restaurant.Address.Latitude * Math.PI / 180)
-                                       * Math.Cos((restaurant.Address.Longitude * Math.PI / 180) - (longitude * Math.PI / 180)) + Math.Sin(latitude * Math.PI / 180) *
-                                       Math.Sin(restaurant.Address.Latitude * Math.PI / 180)))
-                                      where distance < maxDistance
-                                      orderby distance
-                                      select restaurant
-                                          );
-
+            var closestRestaurants = await _restaurantRepository.GetClosest(latitude, longitude, maxDistance);
             return _mapper.Map<IEnumerable<RestaurantViewModel>>(closestRestaurants);
         }
 

@@ -10,7 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Next3.Application.Services
+namespace MyFood.Application.Services
 {
     public class OrderAppService : IOrderAppService
     {

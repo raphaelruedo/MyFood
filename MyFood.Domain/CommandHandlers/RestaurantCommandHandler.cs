@@ -28,49 +28,49 @@ namespace MyFood.Domain.CommandHandlers
             Bus = bus;
         }
 
-        public async Task<Unit> Handle(RegisterNewRestaurantCommand message, CancellationToken cancellationToken)
+        public Task<Unit> Handle(RegisterNewRestaurantCommand message, CancellationToken cancellationToken)
         {
             if (!message.IsValid())
             {
                 NotifyValidationErrors(message);
-                return await Unit.Task;
+                return Unit.Task;
             }
 
             var restaurant = new Restaurant(Guid.NewGuid(), message.Name, message.Description, message.IsActive, message.ExpertiseId, message.Address);
 
-            if (await _restaurantRepository.GetByAddress(restaurant.Address.Street, restaurant.Address.Number) != null)
+            if (_restaurantRepository.GetByAddress(restaurant.Address.Street, restaurant.Address.Number).Result != null)
             {
-                await Bus.RaiseEvent(new DomainNotification(message.MessageType, "Já existe um restaurant com este endereço."));
-                return await Unit.Task;
+                 Bus.RaiseEvent(new DomainNotification(message.MessageType, "Já existe um restaurant com este endereço."));
+                return  Unit.Task;
             }
 
             _restaurantRepository.Add(restaurant);
 
             if (Commit())
             {
-                await Bus.RaiseEvent(new RestaurantRegisteredEvent(restaurant.Id, restaurant.Name, restaurant.Description, restaurant.IsActive, restaurant.ExpertiseId, restaurant.Address));
+                 Bus.RaiseEvent(new RestaurantRegisteredEvent(restaurant.Id, restaurant.Name, restaurant.Description, restaurant.IsActive, restaurant.ExpertiseId, restaurant.Address));
             }
 
-            return await Unit.Task;
+            return  Unit.Task;
         }
 
-        public async Task<Unit> Handle(UpdateRestaurantCommand message, CancellationToken cancellationToken)
+        public Task<Unit> Handle(UpdateRestaurantCommand message, CancellationToken cancellationToken)
         {
             if (!message.IsValid())
             {
                 NotifyValidationErrors(message);
-                return await Unit.Task;
+                return Unit.Task;
             }
 
             var restaurant = new Restaurant(message.Id, message.Name, message.Description, message.IsActive, message.ExpertiseId, message.Address);
-            var existingRestaurant = await _restaurantRepository.GetByAddress(restaurant.Address.Street, restaurant.Address.Number);
+            var existingRestaurant = _restaurantRepository.GetByAddress(restaurant.Address.Street, restaurant.Address.Number).Result;
 
             if (existingRestaurant != null && existingRestaurant.Id != restaurant.Id)
             {
                 if (!existingRestaurant.Equals(restaurant))
                 {
-                    await Bus.RaiseEvent(new DomainNotification(message.MessageType, "Já existe um restaurante com este nome"));
-                    return await Unit.Task;
+                    Bus.RaiseEvent(new DomainNotification(message.MessageType, "Já existe um restaurante com este nome"));
+                    return Unit.Task;
                 }
             }
 
@@ -78,28 +78,28 @@ namespace MyFood.Domain.CommandHandlers
 
             if (Commit())
             {
-                await Bus.RaiseEvent(new RestaurantUpdatedEvent(restaurant.Id, restaurant.Name, restaurant.Description, restaurant.IsActive, restaurant.ExpertiseId));
+                Bus.RaiseEvent(new RestaurantUpdatedEvent(restaurant.Id, restaurant.Name, restaurant.Description, restaurant.IsActive, restaurant.ExpertiseId));
             }
 
-            return await Unit.Task;
+            return Unit.Task;
         }
 
-        public async Task<Unit> Handle(RemoveRestaurantCommand message, CancellationToken cancellationToken)
+        public Task<Unit> Handle(RemoveRestaurantCommand message, CancellationToken cancellationToken)
         {
             if (!message.IsValid())
             {
                 NotifyValidationErrors(message);
-                return await Unit.Task;
+                return Unit.Task;
             }
 
             _restaurantRepository.Remove(message.Id);
 
             if (Commit())
             {
-                await Bus.RaiseEvent(new RestaurantRemovedEvent(message.Id));
+                Bus.RaiseEvent(new RestaurantRemovedEvent(message.Id));
             }
 
-            return await Unit.Task;
+            return Unit.Task;
         }
 
         public void Dispose()

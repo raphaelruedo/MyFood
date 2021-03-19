@@ -8,18 +8,27 @@ namespace MyFood.Application.AutoMapper
 {
     public class ViewModelToDomainMappingProfile : Profile
     {
-        private readonly IMapper _mapper;
-
-        public ViewModelToDomainMappingProfile(IMapper mapper)
+     
+        public ViewModelToDomainMappingProfile()
         {
-            _mapper = mapper;
+
+
+            var config = new MapperConfiguration(cfg =>
+            {
+                cfg.CreateMap<AddressViewModel, Address>();
+            });
+
+
+            //var mapper = config.CreateMapper();
+
+            var mapper = new Mapper(config);
 
             //Restaurants
             CreateMap<RestaurantViewModel, RegisterNewRestaurantCommand>()
-                .ConstructUsing(r => new RegisterNewRestaurantCommand(r.Name, r.Description, r.IsActive, r.ExpertiseId, _mapper.Map<AddressViewModel, Address>(r.Address)));
+                .ConstructUsing(r => new RegisterNewRestaurantCommand(r.Name, r.Description, r.IsActive, r.ExpertiseId, mapper.Map<AddressViewModel,Address>(r.Address)));
 
             CreateMap<RestaurantViewModel, UpdateRestaurantCommand>()
-                .ConstructUsing(r => new UpdateRestaurantCommand(r.Id, r.Name, r.Description, r.IsActive, r.ExpertiseId));
+                .ConstructUsing(r => new UpdateRestaurantCommand(r.Id, r.Name, r.Description, r.IsActive, r.ExpertiseId, mapper.Map<AddressViewModel, Address>(r.Address)));
 
             //PRoducts
             CreateMap<ProductViewModel, RegisterNewProductCommand>()
@@ -31,10 +40,10 @@ namespace MyFood.Application.AutoMapper
 
             //Order
             CreateMap<OrderViewModel, RegisterNewOrderCommand>()
-               .ConstructUsing(order => new RegisterNewOrderCommand(order.Observation, _mapper.Map<List<OrderItemViewModel>, List<OrderItem>>(order.OrderItens), order.UserId, _mapper.Map<AddressViewModel, Address>(order.Address), order.OrderStatusId));
+               .ConstructUsing(order => new RegisterNewOrderCommand(order.Observation, mapper.Map<List<OrderItemViewModel>, List<OrderItem>>(order.OrderItens), order.UserId, mapper.Map<AddressViewModel, Address>(order.Address), order.OrderStatusId));
 
             CreateMap<OrderViewModel, UpdateOrderCommand>()
-                .ConstructUsing(order => new UpdateOrderCommand(order.Id, order.Observation, _mapper.Map<List<OrderItemViewModel>, List<OrderItem>>(order.OrderItens), order.UserId, _mapper.Map<AddressViewModel, Address>(order.Address), order.OrderStatusId));
+                .ConstructUsing(order => new UpdateOrderCommand(order.Id, order.Observation, mapper.Map<List<OrderItemViewModel>, List<OrderItem>>(order.OrderItens), order.UserId, mapper.Map<AddressViewModel, Address>(order.Address), order.OrderStatusId));
 
         }
     }
